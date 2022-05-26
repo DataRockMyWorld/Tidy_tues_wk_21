@@ -4,11 +4,6 @@ library(tidyverse)
 library(tidytuesdayR)
 library(skimr)
 library(showtext)
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(rnaturalearthhires)
-library(sf)
-library(magick)
 library(cowplot)
 
 font_add_google("Roboto","Roboto")
@@ -17,7 +12,7 @@ font_add_google("Bungee Shade","Bungee Shade")
 
 showtext_auto()
 
-devtools::install_github("ropensci/rnaturalearthhires") 
+
 #Importing Data
 
 tidy_data <- tt_load("2022-05-24")
@@ -49,43 +44,13 @@ margin_victory <- fifteens %>%
 
 # Joining the Two Datasets
 fiftns_wc_winners <- inner_join(fifteens_wc,margin_victory) %>% 
-  filter(winner != "Draw") %>% 
-  rename("sovereignt" = winner)
+  filter(winner != "Draw") 
 
-
-
-# Plot of winners and their no of wins
-world <- ne_countries(scale = "medium", returnclass ="sf") 
-
-world1 <- full_join(world,fiftns_wc_winners, by = "sovereignt")
-
-world1 %>% 
-  ggplot() +
-  geom_sf() +
-  geom_sf(aes(fill = No_games_won)) +
-  scale_color_gradient2(midpoint = mid, low = "#dd8a0b",
-                        mid = "grey92", high = "#32a676") +
-  theme_light() +
-  theme(
-    panel.background = element_rect(fill = "#abdbe3"),
-    panel.grid.major = element_line(color = "grey50", linetype = "dashed",size = 0.5),
-    
-  )
-
-
-
-world_filter <- world1 %>% filter(sovereignt %in% countries)
-
-
-countries <- c("England","New Zealand","United States","France",
-  "Canada","Australia","Spain","Kazakhstan","Ireland","Wales",
-  "Scotland","Japan","Italy","Netherlands","Samoa","South Africa",
-  "Sweden","Hong Kong","Fiji","Germany","Thailand")
 
 # Bar plot
 
 p1 <- fiftns_wc_winners %>% 
-  ggplot(aes(No_games_won,fct_reorder(sovereignt,No_games_won)))+
+  ggplot(aes(No_games_won,fct_reorder(winner,No_games_won)))+
   geom_col(aes(fill = No_games_won),) +
   geom_label(aes(label = No_games_won), size = 2) +
   scale_fill_viridis_c(option = "inferno") +
@@ -99,7 +64,6 @@ p1 <- fiftns_wc_winners %>%
     axis.text.y = element_text(size = 8, family = "Roboto", colour = "white"),
     axis.text.x = element_blank(),
     axis.title = element_text(size = 9,family = "Roboto", face = "bold", colour = "white"),
-    panel.background = element_rect(fill = "#1e2223"),
     plot.background = element_rect(fill = "#1e2223"),
     axis.line = element_blank(),
     axis.ticks = element_blank()
@@ -107,16 +71,16 @@ p1 <- fiftns_wc_winners %>%
   )
 
 ggdraw(p1) +
-  draw_image("https://d3gbf3ykm8gp5c.cloudfront.net/content/uploads/2017/08/06215750/1022.6666666666666x767__origin__0x0_Womens_World_Cup_pic.jpg",
-             width = 0.2,height = 0.2,vjust = -1.5,hjust = -2.5, scale = 1.5)
+  draw_image("https://i.pinimg.com/originals/41/ed/3a/41ed3a981cc90b1f328b87b1e97c9373.png",
+             width = 0.2,height = 0.2,vjust = -1.5,hjust = -2.5, scale = 1.7)
 
 
 
 ggdraw(p1) +
-  draw_image("https://d3gbf3ykm8gp5c.cloudfront.net/content/uploads/2017/08/06215750/1022.6666666666666x767__origin__0x0_Womens_World_Cup_pic.jpg",
-             scale = 0.3) +
+  draw_image("https://i.pinimg.com/originals/41/ed/3a/41ed3a981cc90b1f328b87b1e97c9373.png",
+             scale = 0.5) +
   draw_plot(p1)
 
 
 
-
+#1e2223
