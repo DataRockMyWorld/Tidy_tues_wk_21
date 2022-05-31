@@ -47,11 +47,13 @@ fiftns_wc_winners <- inner_join(fifteens_wc,margin_victory) %>%
   filter(winner != "Draw") 
 
 
-# Bar plot
+# Bar plot Top 11
 
-p1 <- fiftns_wc_winners %>% 
+p1 <- fiftns_wc_winners %>%
+  arrange(-No_games_won) %>% 
+  head(11) %>% 
   ggplot(aes(No_games_won,fct_reorder(winner,No_games_won)))+
-  geom_col(aes(fill = No_games_won),) +
+  geom_col(aes(fill = No_games_won),width = 1) +
   geom_label(aes(label = No_games_won), size = 2) +
   scale_fill_viridis_c(option = "inferno") +
   labs(title = "England & New Zealand Lead the Way In Games Won at The World Cup",
@@ -76,11 +78,41 @@ ggdraw(p1) +
 
 
 
-ggdraw(p1) +
+ggdraw(p2) +
   draw_image("https://i.pinimg.com/originals/41/ed/3a/41ed3a981cc90b1f328b87b1e97c9373.png",
              scale = 0.5) +
-  draw_plot(p1)
+  draw_plot(p2)
 
 
 
-#1e2223
+p2 <- fiftns_wc_winners %>%
+  arrange(-No_games_won) %>% 
+  head(11) %>% 
+  ggplot(aes(fct_reorder(winner,No_games_won),No_games_won)) +
+  geom_col(aes(fill = No_games_won),width = 1) +
+  geom_label(aes(label = No_games_won), size = 2,show.legend = F) +
+  scale_fill_viridis_c(option = "inferno") +
+  ylim(-50,50) +
+  coord_polar(start = 0) +
+  labs(title = "England & New Zealand Lead the Way In Games Won\n at The World Cup",
+       caption = "Data from Tidy_Tuesday_wk_19 | plot by blake analytics",
+       x = "Total Games Won",
+       y = "Country") +
+  theme_cowplot(11) +
+  theme(
+    plot.title = element_text(size = 14, family = "Berkshire Swash",colour = "black"),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank(),
+    axis.title = element_text(size = 9,family = "Roboto", face = "bold", colour = "black"),
+    axis.line = element_blank(),
+    axis.ticks = element_blank()
+    
+  )
+
+?coord_polar
+
+
+
+
+
+
